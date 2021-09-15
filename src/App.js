@@ -1,6 +1,4 @@
-/* eslint-disable default-case */
 import { useState } from 'react';
-
 import FeedbackOptions from './components/FeedbackOptions';
 import Statistics from './components/Statistics';
 import Container from './components/Container/Container';
