@@ -1,69 +1,68 @@
-import React, { Component } from 'react';
+/* eslint-disable default-case */
+import { useState } from 'react';
+
 import FeedbackOptions from './components/FeedbackOptions';
 import Statistics from './components/Statistics';
 import Container from './components/Container/Container';
 import Section from './components/Section';
 
-class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+export default function App() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const changeState = value => {
+    switch (value) {
+      case 'good':
+        setGood(prevState => prevState + 1);
+        break;
+
+      case 'neutral':
+        setNeutral(prevState => prevState + 1);
+        break;
+
+      case 'bad':
+        setBad(prevState => prevState + 1);
+        break;
+
+      default:
+        return;
+    }
   };
 
-  changeState = value => {
-    this.setState(prevState => {
-      return {
-        [value]: prevState[value] + 1,
-      };
-    });
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
   };
 
-  countTotalFeedback = () => {
-    const totalValueObj = Object.values(this.state);
-    const totalValue = totalValueObj.reduce((total, value) => {
-      return total + value;
-    }, 0);
-
-    return totalValue;
-  };
-
-  countPositiveFeedbackPercentage = total => {
+  const countPositiveFeedbackPercentage = total => {
     if (total === 0) {
       return 0;
     }
-
-    const { good } = this.state;
     const percentage = (good / total) * 100;
     return Number(percentage.toFixed());
   };
 
-  render() {
-    const totalFeedback = this.countTotalFeedback();
-    const positiveFeedbackPercentage = this.countPositiveFeedbackPercentage(totalFeedback);
-    const { good, neutral, bad } = this.state;
+  const totalFeedback = countTotalFeedback();
+  const positiveFeedbackPercentage = countPositiveFeedbackPercentage(totalFeedback);
 
-    return (
-      <Container>
-        <Section text="please leave feedback">
-          <FeedbackOptions
-            options={['good', 'neutral', 'bad']}
-            onchangeState={this.changeState}
-          ></FeedbackOptions>
-        </Section>
+  return (
+    <Container>
+      <Section text="please leave feedback">
+        <FeedbackOptions
+          options={['good', 'neutral', 'bad']}
+          onchangeState={changeState}
+        ></FeedbackOptions>
+      </Section>
 
-        <Section text="statistics">
-          <Statistics
-            good={good}
-            neutral={neutral}
-            bad={bad}
-            total={totalFeedback}
-            positivePercentage={positiveFeedbackPercentage}
-          ></Statistics>
-        </Section>
-      </Container>
-    );
-  }
+      <Section text="statistics">
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={totalFeedback}
+          positivePercentage={positiveFeedbackPercentage}
+        ></Statistics>
+      </Section>
+    </Container>
+  );
 }
-
-export default App;
